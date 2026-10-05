@@ -16,8 +16,12 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 20
-          cache: 'npm'
+          node-version: 22
+
+      - name: Select Xcode
+        run: |
+          sudo xcode-select -s /Applications/Xcode_16.0.app || sudo xcode-select -s /Applications/Xcode_15.4.app || sudo xcode-select -s /Applications/Xcode.app
+          xcodebuild -version
 
       - name: Install dependencies
         run: npm install
@@ -25,8 +29,9 @@ jobs:
       - name: Build Web Assets
         run: npm run build
 
-      - name: Sync Capacitor iOS
-        run: npx cap sync ios
+      - name: Copy Web Assets to Capacitor iOS
+        run: |
+          npx cap copy ios --verbose
 
       - name: Build iOS Archive (Unsigned)
         run: |
