@@ -29,9 +29,12 @@ jobs:
       - name: Build Web Assets
         run: npm run build
 
-      - name: Copy Web Assets to Capacitor iOS
+      - name: Copy Web Assets to iOS
         run: |
-          npx cap copy ios --verbose
+          mkdir -p ios/App/App/public
+          cp -r dist/* ios/App/App/public/
+          cp capacitor.config.json ios/App/App/capacitor.config.json
+          npx cap copy ios || true
 
       - name: Build iOS Archive (Unsigned)
         run: |
