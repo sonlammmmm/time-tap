@@ -48,89 +48,133 @@ Copy-Item "$projectRoot\public\apple-touch-icon.png" "$appDir\AppIcon60x60@2x.pn
 Copy-Item "$projectRoot\public\apple-touch-icon.png" "$appDir\AppIcon76x76@2x~ipad.png" -Force
 Copy-Item "$projectRoot\public\icon-512.png" "$appDir\AppIcon-512@2x.png" -Force
 
-# Copy Web Assets into app bundle
+# Copy Web Assets into app bundle root AND public/
 Copy-Item -Recurse "$distDir\*" "$appDir\" -Force
 New-Item -ItemType Directory -Path "$appDir\public" -Force | Out-Null
 Copy-Item -Recurse "$distDir\*" "$appDir\public\" -Force
 
-# Create PkgInfo
-Set-Content -Path "$appDir\PkgInfo" -Value "APPL????" -NoNewline
+# Create PkgInfo (Standard iOS application signature)
+[System.IO.File]::WriteAllBytes("$appDir\PkgInfo", [System.Text.Encoding]::ASCII.GetBytes("APPL????"))
 
-# Create Info.plist with microphone permissions
+# Create Info.plist with clean standard keys for SideStore / AltStore / Apple
 $plistContent = @"
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-    <key>CFBundleDevelopmentRegion</key>
-    <string>en</string>
-    <key>CFBundleDisplayName</key>
-    <string>Poker Shot Clock</string>
-    <key>CFBundleExecutable</key>
-    <string>ShotClock</string>
-    <key>CFBundleIdentifier</key>
-    <string>com.timetap.shotclock</string>
-    <key>CFBundleInfoDictionaryVersion</key>
-    <string>6.0</string>
-    <key>CFBundleName</key>
-    <string>ShotClock</string>
-    <key>CFBundlePackageType</key>
-    <string>APPL</string>
-    <key>CFBundleShortVersionString</key>
-    <string>1.0.0</string>
-    <key>CFBundleVersion</key>
-    <string>1</string>
-    <key>LSRequiresIPhoneOS</key>
-    <true/>
-    <key>MinimumOSVersion</key>
-    <string>14.0</string>
-    <key>UIRequiresFullScreen</key>
-    <true/>
-    <key>NSMicrophoneUsageDescription</key>
-    <string>Ứng dụng cần quyền sử dụng microphone để ghi âm âm thanh cảnh báo và thông báo hết giờ tùy chỉnh.</string>
-    <key>NSAppTransportSecurity</key>
-    <dict>
-        <key>NSAllowsArbitraryLoads</key>
-        <true/>
-    </dict>
-    <key>UILaunchStoryboardName</key>
-    <string>LaunchScreen</string>
-    <key>UIDeviceFamily</key>
-    <array>
-        <integer>1</integer>
-        <integer>2</integer>
-    </array>
-    <key>UISupportedInterfaceOrientations</key>
-    <array>
-        <string>UIInterfaceOrientationPortrait</string>
-        <string>UIInterfaceOrientationLandscapeLeft</string>
-        <string>UIInterfaceOrientationLandscapeRight</string>
-    </array>
-    <key>UISupportedInterfaceOrientations~ipad</key>
-    <array>
-        <string>UIInterfaceOrientationPortrait</string>
-        <string>UIInterfaceOrientationPortraitUpsideDown</string>
-        <string>UIInterfaceOrientationLandscapeLeft</string>
-        <string>UIInterfaceOrientationLandscapeRight</string>
-    </array>
+	<key>BuildMachineOSBuild</key>
+	<string>22A380</string>
+	<key>CFBundleDevelopmentRegion</key>
+	<string>en</string>
+	<key>CFBundleDisplayName</key>
+	<string>Poker Shot Clock</string>
+	<key>CFBundleExecutable</key>
+	<string>ShotClock</string>
+	<key>CFBundleIcons</key>
+	<dict>
+		<key>CFBundlePrimaryIcon</key>
+		<dict>
+			<key>CFBundleIconFiles</key>
+			<array>
+				<string>AppIcon60x60</string>
+			</array>
+			<key>CFBundleIconName</key>
+			<string>AppIcon</string>
+		</dict>
+	</dict>
+	<key>CFBundleIcons~ipad</key>
+	<dict>
+		<key>CFBundlePrimaryIcon</key>
+		<dict>
+			<key>CFBundleIconFiles</key>
+			<array>
+				<string>AppIcon76x76</string>
+			</array>
+		</dict>
+	</dict>
+	<key>CFBundleIdentifier</key>
+	<string>com.timetap.shotclock</string>
+	<key>CFBundleInfoDictionaryVersion</key>
+	<string>6.0</string>
+	<key>CFBundleName</key>
+	<string>ShotClock</string>
+	<key>CFBundlePackageType</key>
+	<string>APPL</string>
+	<key>CFBundleShortVersionString</key>
+	<string>1.0.0</string>
+	<key>CFBundleSupportedPlatforms</key>
+	<array>
+		<string>iPhoneOS</string>
+	</array>
+	<key>CFBundleVersion</key>
+	<string>1</string>
+	<key>DTPlatformName</key>
+	<string>iphoneos</string>
+	<key>DTSDKName</key>
+	<string>iphoneos16.0</string>
+	<key>LSRequiresIPhoneOS</key>
+	<true/>
+	<key>MinimumOSVersion</key>
+	<string>14.0</string>
+	<key>NSAppTransportSecurity</key>
+	<dict>
+		<key>NSAllowsArbitraryLoads</key>
+		<true/>
+	</dict>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>Ứng dụng cần quyền sử dụng microphone để ghi âm âm thanh cảnh báo và thông báo hết giờ tùy chỉnh.</string>
+	<key>UIDeviceFamily</key>
+	<array>
+		<integer>1</integer>
+		<integer>2</integer>
+	</array>
+	<key>UILaunchStoryboardName</key>
+	<string>LaunchScreen</string>
+	<key>UIRequiredDeviceCapabilities</key>
+	<array>
+		<string>arm64</string>
+	</array>
+	<key>UIRequiresFullScreen</key>
+	<true/>
+	<key>UISupportedInterfaceOrientations</key>
+	<array>
+		<string>UIInterfaceOrientationPortrait</string>
+		<string>UIInterfaceOrientationLandscapeLeft</string>
+		<string>UIInterfaceOrientationLandscapeRight</string>
+	</array>
+	<key>UISupportedInterfaceOrientations~ipad</key>
+	<array>
+		<string>UIInterfaceOrientationPortrait</string>
+		<string>UIInterfaceOrientationPortraitUpsideDown</string>
+		<string>UIInterfaceOrientationLandscapeLeft</string>
+		<string>UIInterfaceOrientationLandscapeRight</string>
+	</array>
 </dict>
 </plist>
 "@
-Set-Content -Path "$appDir\Info.plist" -Value $plistContent -Encoding UTF8
+[System.IO.File]::WriteAllText("$appDir\Info.plist", $plistContent, [System.Text.UTF8Encoding]::new($false))
 
-# 4. Create .ipa (zip archive)
-Write-Host "`n[4/4] Packaging into ShotClock.ipa..." -ForegroundColor Yellow
+# Remove any stale _CodeSignature or provisioning files so SideStore can sign cleanly
+if (Test-Path "$appDir\_CodeSignature") {
+    Remove-Item -Recurse -Force "$appDir\_CodeSignature" -ErrorAction SilentlyContinue
+}
+if (Test-Path "$appDir\embedded.mobileprovision") {
+    Remove-Item -Force "$appDir\embedded.mobileprovision" -ErrorAction SilentlyContinue
+}
+
+# 4. Create .ipa using tar.exe (Crucial for SideStore/AltStore: guarantees POSIX forward slashes / and POSIX file flags)
+Write-Host "`n[4/4] Packaging into ShotClock.ipa with POSIX compliance..." -ForegroundColor Yellow
 if (Test-Path $ipaOut) {
     Remove-Item -Force $ipaOut
 }
 
-$tempZip = "$projectRoot\ShotClock_temp.zip"
-if (Test-Path $tempZip) {
-    Remove-Item -Force $tempZip
+Push-Location $buildDir
+try {
+    # Create standard POSIX zip with forward slashes
+    tar.exe --format=zip -c -f "$ipaOut" Payload
+} finally {
+    Pop-Location
 }
-
-Compress-Archive -Path $payloadDir -DestinationPath $tempZip -CompressionLevel Optimal
-Rename-Item -Path $tempZip -NewName "ShotClock.ipa" -Force
 
 # Clean up build staging
 Remove-Item -Recurse -Force $buildDir -ErrorAction SilentlyContinue
@@ -141,4 +185,5 @@ $sizeMb = [math]::Round($fileInfo.Length / 1MB, 2)
 Write-Host "`n========================================================" -ForegroundColor Green
 Write-Host " [SUCCESS] File .ipa created successfully!            " -ForegroundColor Green
 Write-Host " Output file: $ipaOut ($sizeMb MB)                     " -ForegroundColor Green
+Write-Host " Format: Standard POSIX ZIP (Payload/ShotClock.app/)   " -ForegroundColor Green
 Write-Host "========================================================" -ForegroundColor Green
