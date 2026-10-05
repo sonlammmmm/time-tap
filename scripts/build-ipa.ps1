@@ -36,9 +36,6 @@ if (!(Test-Path "$runnerDir\ShotClock")) {
 }
 
 Copy-Item "$runnerDir\ShotClock" "$appDir\ShotClock" -Force
-if (Test-Path "$runnerDir\Assets.car") {
-    Copy-Item "$runnerDir\Assets.car" "$appDir\Assets.car" -Force
-}
 if (Test-Path "$runnerDir\LaunchScreen.storyboardc") {
     Copy-Item -Recurse "$runnerDir\LaunchScreen.storyboardc" "$appDir\LaunchScreen.storyboardc" -Force
 }
